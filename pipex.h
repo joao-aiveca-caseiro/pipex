@@ -15,5 +15,14 @@
 
 # include "libft/libft.h"
 # include <fcntl.h>
+# include <string.h>
+# include <errno.h>
+
+void	cmd_exec(char *argv, char **envp);
+char	**cmd_parsing(char **envp);
+char	**path_splitter(char *envp_path);
+void	create_pipe(int infile_fd, int outfile_fd, char **argv, char **envp);
+void	parent_process(int outfile_fd, int *pipe_fd, char **argv, char **envp);
+void	child_process(int infile_fd, int *pipe_fd, char **argv, char **envp);
 
 #endif
