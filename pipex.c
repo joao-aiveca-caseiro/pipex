@@ -6,7 +6,7 @@
 /*   By: jaiveca- <jaiveca-@student.42lisboa.com>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/24 13:08:00 by jaiveca-          #+#    #+#             */
-/*   Updated: 2023/02/01 16:40:57 by jaiveca-         ###   ########.fr       */
+/*   Updated: 2023/02/06 03:39:59 by jaiveca-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,12 +36,10 @@ char	**path_splitter(char *envp_path)
 char	**cmd_parsing(char **envp)
 {
 	int		i;
-	int		j;
 	char	*envp_path;
 	char	**split_paths;
 
 	i = 0;
-	j = 0;
 	envp_path = NULL;
 	while (envp[i])
 	{
@@ -56,14 +54,37 @@ char	**cmd_parsing(char **envp)
 	return (split_paths);
 }
 
+void	cmd_exec(char **argv, char **envp)
+{
+	int		i;
+	int		not_found;
+	char	**split_paths;
+	char	**cmd_args;
+	char	*cmd;
+
+	i = 0;
+	not_found = 0;
+	split_paths = cmd_parsing(envp);
+	cmd_args = ft_split(argv[2], ' ');
+	while (split_paths[i])
+	{
+		cmd = ft_strjoin(split_paths[i], cmd_args[0]);
+		if (execve(cmd, cmd_args, envp) == -1)
+			not_found++;
+		else
+			break ;
+		i++;
+		if (not_found == i && split_paths[i] == NULL)
+			ft_printf("%s: command not found\n", cmd_args[0]);
+		free(cmd);
+	}
+}
+
 int	main(int argc, char **argv, char **envp)
 {
 	int		infile_fd;
 //	int		outfile_fd;
-	int		i;
-	char	**split_paths;
-	char	**cmd_args;
-	char	*cmd;
+//	int		i;
 
 	if (argc > 4)
 	{
@@ -72,20 +93,6 @@ int	main(int argc, char **argv, char **envp)
 			perror("Error");
 	//	outfile_fd = open(argv[argc - 1], O_RDWR | O_CREAT);
 		dup2(infile_fd, STDIN_FILENO);
-		split_paths = cmd_parsing(envp);
-		cmd_args = ft_split(argv[2], ' ');
-		i = 0;
-		while (split_paths[i])
-		{
-			cmd = ft_strjoin(split_paths[i], cmd_args[0]);
-			if (execve(cmd, cmd_args, envp) == -1)
-			{
-				perror("Error");
-				free(cmd);
-			}
-			else
-				break ;
-			i++;
-		}
+		cmd_exec(argv, envp);
 	}
 }
