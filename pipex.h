@@ -6,7 +6,7 @@
 /*   By: jaiveca- <jaiveca-@student.42lisboa.com>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/24 13:08:32 by jaiveca-          #+#    #+#             */
-/*   Updated: 2023/01/26 14:34:23 by jaiveca-         ###   ########.fr       */
+/*   Updated: 2023/02/08 16:15:46 by jaiveca-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,6 +17,7 @@
 # include <fcntl.h>
 # include <string.h>
 # include <errno.h>
+# include <sys/wait.h>
 
 void	cmd_exec(char *argv, char **envp);
 char	**cmd_parsing(char **envp);

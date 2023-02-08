@@ -6,7 +6,7 @@
 /*   By: jaiveca- <jaiveca-@student.42lisboa.com>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/24 13:08:00 by jaiveca-          #+#    #+#             */
-/*   Updated: 2023/02/07 16:29:01 by jaiveca-         ###   ########.fr       */
+/*   Updated: 2023/02/08 19:07:56 by jaiveca-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,13 +25,16 @@ void	child_process(int infile_fd, int *pipe_fd, char **argv, char **envp)
 
 void	parent_process(int outfile_fd, int *pipe_fd, char **argv, char **envp)
 {
+	int	wstatus;
+
+	wait(&wstatus);
 	if (dup2(pipe_fd[0], STDIN_FILENO) == -1)
 		perror("Dup stdin parent");
 	if (dup2(outfile_fd, STDOUT_FILENO) == -1)
 		perror("Dup stdout parent");
 	close(pipe_fd[1]);
 	close(outfile_fd);
-	cmd_exec(argv[4], envp);
+	cmd_exec(argv[3], envp);
 }
 
 void	create_pipe(int infile_fd, int outfile_fd, char **argv, char **envp)
@@ -113,9 +116,14 @@ void	cmd_exec(char *argv, char **envp)
 			break ;
 		i++;
 		if (not_found == i && split_paths[i] == NULL)
+		{
 			ft_printf("%s: command not found\n", cmd_args[0]);
+			exit(0);
+		}
 		free(cmd);
 	}
+//	free(cmd_args);
+//	free(split_paths);
 }
 
 int	main(int argc, char **argv, char **envp)
@@ -124,10 +132,10 @@ int	main(int argc, char **argv, char **envp)
 	int		outfile_fd;
 	if (argc > 4)
 	{
-		infile_fd = open(argv[1], O_RDWR);
+		infile_fd = open(argv[1], O_RDONLY);
 		if (infile_fd == -1)
 			ft_printf("Error: %s: %s\n", strerror(errno), argv[1]);
-		outfile_fd = open(argv[argc - 1], O_RDWR | O_CREAT);
+		outfile_fd = open(argv[argc - 1], O_WRONLY | O_TRUNC | O_CREAT, 00666);
 		if (outfile_fd == -1)
 			ft_printf("Error: %s: %s\n", strerror(errno), argv[argc - 1]);
 		create_pipe(infile_fd, outfile_fd, argv, envp);
