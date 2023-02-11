@@ -6,7 +6,7 @@
 /*   By: jaiveca- <jaiveca-@student.42lisboa.com>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/24 13:08:00 by jaiveca-          #+#    #+#             */
-/*   Updated: 2023/02/08 19:07:56 by jaiveca-         ###   ########.fr       */
+/*   Updated: 2023/02/11 04:10:41 by jaiveca-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,9 +25,9 @@ void	child_process(int infile_fd, int *pipe_fd, char **argv, char **envp)
 
 void	parent_process(int outfile_fd, int *pipe_fd, char **argv, char **envp)
 {
-	int	wstatus;
+	int	status;
 
-	wait(&wstatus);
+	waitpid(-1, &status, 0);
 	if (dup2(pipe_fd[0], STDIN_FILENO) == -1)
 		perror("Dup stdin parent");
 	if (dup2(outfile_fd, STDOUT_FILENO) == -1)
