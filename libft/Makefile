@@ -10,7 +10,7 @@ SRCS = ft_atoi.c ft_bzero.c ft_calloc.c ft_isalnum.c\
 		ft_lstsize.c ft_lstlast.c ft_lstadd_back.c\
 		ft_printf_char.c ft_lstclear.c ft_lstdelone.c\
 		ft_printf_hex.c ft_printf_num.c ft_printf.c get_next_line.c\
-		get_next_line_utils.c
+		get_next_line_utils.c ft_split_paths.c
 OBJS = ${SRCS:.c=.o}
 NAME = libft.a
 CC = cc

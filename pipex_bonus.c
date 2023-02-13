@@ -1,16 +1,16 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   pipex.c                                            :+:      :+:    :+:   */
+/*   pipex_bonus.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: jaiveca- <jaiveca-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/24 13:08:00 by jaiveca-          #+#    #+#             */
-/*   Updated: 2023/02/13 17:19:41 by jaiveca-         ###   ########.fr       */
+/*   Updated: 2023/02/13 19:33:51 by jaiveca-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "pipex.h"
+#include "pipex_bonus.h"
 
 void	child_process1(int infile_fd, int *pipe_fd, char **argv, char **envp)
 {
@@ -33,12 +33,13 @@ void	child_process2(int outfile_fd, int *pipe_fd, char **argv, char **envp)
 	cmd_exec(argv[3], envp);
 }
 
-void	create_pipe(int infile_fd, int outfile_fd, char **argv, char **envp)
+void	create_pipe(int infile_fd, int outfile_fd, char **argv, char **envp, int total_pipe_fds)
 {
 	int		pipe_fd[2];
 	pid_t	fork_pid1;
 	pid_t	fork_pid2;
 
+	//while (i < )
 	if (pipe(pipe_fd) == -1)
 		perror("Pipe");
 	fork_pid1 = fork();
@@ -63,12 +64,16 @@ int	main(int argc, char **argv, char **envp)
 {
 	int		infile_fd;
 	int		outfile_fd;
+	int		total_cmds;
+	int		total_pipe_fds;
 
-	if (argc != 5)
+	if (argc < 5)
 	{
 		write(2, "Error: invalid number of arguments.\n", 37);
 		exit(1);
 	}
+	total_cmds = argc - 3;
+	total_pipe_fds = 2 * (total_cmds - 1);
 	infile_fd = open(argv[1], O_RDONLY);
 	if (infile_fd == -1)
 	{
@@ -81,5 +86,5 @@ int	main(int argc, char **argv, char **envp)
 		perror(argv[argc - 1]);
 		exit(1);
 	}
-	create_pipe(infile_fd, outfile_fd, argv, envp);
+	create_pipe(infile_fd, outfile_fd, argv, envp, total_pipe_fds);
 }
