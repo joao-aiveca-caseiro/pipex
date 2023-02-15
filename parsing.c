@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   parsing.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jaiveca- <jaiveca-@student.42.fr>          +#+  +:+       +#+        */
+/*   By: jaiveca- <jaiveca-@student.42lisboa.com>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/12 18:46:38 by jaiveca-          #+#    #+#             */
-/*   Updated: 2023/02/13 17:39:17 by jaiveca-         ###   ########.fr       */
+/*   Updated: 2023/02/14 18:38:38 by jaiveca-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,20 +15,8 @@
 int	exec_error(char **cmd_args)
 {
 	write(2, cmd_args[0], ft_strlen(cmd_args[0]));
-	write(2, ": command not found.\n", 27);
+	write(2, ": command not found.\n", 22);
 	return (1);
-}
-
-char	**path_splitter(char *envp_path)
-{
-	char	**split_paths;
-	int		i;
-	int		j;
-
-	split_paths = ft_split_paths(envp_path, ':');
-	i = 0;
-	j = 0;
-	return (split_paths);
 }
 
 char	**cmd_parsing(char **envp)
@@ -48,7 +36,7 @@ char	**cmd_parsing(char **envp)
 		}
 		i++;
 	}
-	split_paths = path_splitter(envp_path);
+	split_paths = ft_split_paths(envp_path, ':');
 	return (split_paths);
 }
 

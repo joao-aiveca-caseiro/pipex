@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   pipex.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jaiveca- <jaiveca-@student.42.fr>          +#+  +:+       +#+        */
+/*   By: jaiveca- <jaiveca-@student.42lisboa.com>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/24 13:08:00 by jaiveca-          #+#    #+#             */
-/*   Updated: 2023/02/13 17:19:41 by jaiveca-         ###   ########.fr       */
+/*   Updated: 2023/02/14 18:35:18 by jaiveca-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,11 +46,14 @@ void	create_pipe(int infile_fd, int outfile_fd, char **argv, char **envp)
 		perror("Fork");
 	else if (fork_pid1 == 0)
 		child_process1(infile_fd, pipe_fd, argv, envp);
-	fork_pid2 = fork();
-	if (fork_pid2 == -1)
-		perror("Fork");
-	else if (fork_pid2 == 0)
-		child_process2(outfile_fd, pipe_fd, argv, envp);
+	else if (fork_pid1 > 0)
+	{
+		fork_pid2 = fork();
+		if (fork_pid2 == -1)
+			perror("Fork");
+		else if (fork_pid2 == 0)
+			child_process2(outfile_fd, pipe_fd, argv, envp);
+	}
 	close(pipe_fd[0]);
 	close(pipe_fd[1]);
 	waitpid(fork_pid1, NULL, 0);
