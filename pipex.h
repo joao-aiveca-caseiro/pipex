@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   pipex.h                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jaiveca- <jaiveca-@student.42lisboa.com>   +#+  +:+       +#+        */
+/*   By: jaiveca- <jaiveca-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/24 13:08:32 by jaiveca-          #+#    #+#             */
-/*   Updated: 2023/02/15 04:34:48 by jaiveca-         ###   ########.fr       */
+/*   Updated: 2023/02/16 14:37:02 by jaiveca-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,5 +25,7 @@ int		exec_error(char **cmd_args);
 void	create_pipe(int infile_fd, int outfile_fd, char **argv, char **envp);
 void	child_process1(int outfile_fd, int *pipe_fd, char **argv, char **envp);
 void	child_process2(int infile_fd, int *pipe_fd, char **argv, char **envp);
+void	print_error(char *msg);
+void	init_error(void);
 
 #endif

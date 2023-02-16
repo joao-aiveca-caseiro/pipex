@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   pipex.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jaiveca- <jaiveca-@student.42lisboa.com>   +#+  +:+       +#+        */
+/*   By: jaiveca- <jaiveca-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/24 13:08:00 by jaiveca-          #+#    #+#             */
-/*   Updated: 2023/02/14 18:35:18 by jaiveca-         ###   ########.fr       */
+/*   Updated: 2023/02/16 14:36:11 by jaiveca-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,28 +36,28 @@ void	child_process2(int outfile_fd, int *pipe_fd, char **argv, char **envp)
 void	create_pipe(int infile_fd, int outfile_fd, char **argv, char **envp)
 {
 	int		pipe_fd[2];
-	pid_t	fork_pid1;
-	pid_t	fork_pid2;
+	pid_t	child1_pid;
+	pid_t	child2_pid;
 
+	child2_pid = 0;
 	if (pipe(pipe_fd) == -1)
 		perror("Pipe");
-	fork_pid1 = fork();
-	if (fork_pid1 == -1)
+	child1_pid = fork();
+	if (child1_pid == -1)
 		perror("Fork");
-	else if (fork_pid1 == 0)
+	else if (child1_pid == 0)
 		child_process1(infile_fd, pipe_fd, argv, envp);
-	else if (fork_pid1 > 0)
+	else if (child1_pid > 0)
 	{
-		fork_pid2 = fork();
-		if (fork_pid2 == -1)
+		child2_pid = fork();
+		if (child2_pid == -1)
 			perror("Fork");
-		else if (fork_pid2 == 0)
+		else if (child2_pid == 0)
 			child_process2(outfile_fd, pipe_fd, argv, envp);
 	}
 	close(pipe_fd[0]);
 	close(pipe_fd[1]);
-	waitpid(fork_pid1, NULL, 0);
-	waitpid(fork_pid2, NULL, 0);
+	waitpid(child2_pid, NULL, 0);
 	close(infile_fd);
 	close(outfile_fd);
 }

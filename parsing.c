@@ -3,21 +3,19 @@
 /*                                                        :::      ::::::::   */
 /*   parsing.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jaiveca- <jaiveca-@student.42lisboa.com>   +#+  +:+       +#+        */
+/*   By: jaiveca- <jaiveca-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/12 18:46:38 by jaiveca-          #+#    #+#             */
-/*   Updated: 2023/02/16 01:46:59 by jaiveca-         ###   ########.fr       */
+/*   Updated: 2023/02/16 15:56:06 by jaiveca-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "pipex.h"
 
-int	exec_error(char **cmd_args)
-{
-	write(2, cmd_args[0], ft_strlen(cmd_args[0]));
-	write(2, ": command not found.\n", 22);
-	return (1);
-}
+/*
+** Finds PATH in the list of environment variables (envp), then
+** splits it into an array of possible command locations.
+*/
 
 char	**cmd_parsing(char **envp)
 {
@@ -39,6 +37,8 @@ char	**cmd_parsing(char **envp)
 	split_paths = ft_split_paths(envp_path, ':');
 	return (split_paths);
 }
+
+
 
 int	cmd_exec(char *argv, char **envp)
 {
