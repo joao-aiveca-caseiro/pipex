@@ -6,7 +6,7 @@
 /*   By: jaiveca- <jaiveca-@student.42lisboa.com>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/24 13:08:00 by jaiveca-          #+#    #+#             */
-/*   Updated: 2023/02/15 04:44:44 by jaiveca-         ###   ########.fr       */
+/*   Updated: 2023/02/16 03:06:11 by jaiveca-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,7 +23,7 @@
 		exit(1);
 }*/
 
-void	create_pipe(int infile_fd, int outfile_fd, char **argv, char **envp, int total_cmds)
+void	create_pipe(int infile_fd, int outfile_fd, char **argv, char **envp, int total_cmds, int has_heredoc)
 {
 	int		pipe_fd[2];
 	int		prev_pipe_fd[2];
@@ -59,7 +59,7 @@ void	create_pipe(int infile_fd, int outfile_fd, char **argv, char **envp, int to
 			close(prev_pipe_fd[0]);
 			if (i > 0)
 				close(prev_pipe_fd[1]);
-			if (cmd_exec(argv[i + 2], envp) == 1)
+			if (cmd_exec(argv[i + 2 + has_heredoc], envp) == 1)
 				exit(1);
 		}
 		else if (child_pid > 0)
@@ -78,29 +78,63 @@ void	create_pipe(int infile_fd, int outfile_fd, char **argv, char **envp, int to
 		close(prev_pipe_fd[1]);
 }
 
+int	heredoc_parse(char *limiter)
+{
+	int		infile_fd;
+	char	*input;
+
+	infile_fd = open("tmp_file", O_WRONLY | O_CREAT, 00666);
+	limiter = ft_strjoin(limiter, "\n");
+	input = ft_calloc(1, 1);
+	while (ft_strncmp(input, limiter, ft_strlen(limiter)) != 0)
+	{
+		free(input);
+		input = get_next_line(0);
+		if (ft_strncmp(input, limiter, ft_strlen(limiter)) == 0)
+			break ;
+		write(infile_fd, input, ft_strlen(input));
+	}
+	free(input);
+	free(limiter);
+	close(infile_fd);
+	infile_fd = open("tmp_file", O_RDONLY);
+	return (infile_fd);
+}
+
 int	main(int argc, char **argv, char **envp)
 {
 	int		infile_fd;
 	int		outfile_fd;
 	int		total_cmds;
+	int		has_heredoc;
 
+	has_heredoc = 0;
 	if (argc < 5)
 	{
 		write(2, "Error: invalid number of arguments.\n", 37);
 		exit(1);
 	}
-	total_cmds = argc - 3;
-	infile_fd = open(argv[1], O_RDONLY);
-	if (infile_fd == -1)
+	if (ft_strncmp(argv[1], "here_doc", 9) == 0)
 	{
-		perror(argv[1]);
-		exit(1);
+		infile_fd = heredoc_parse(argv[2]);
+		outfile_fd = open(argv[argc - 1], O_WRONLY | O_APPEND | O_CREAT, 00666);
+		has_heredoc = 1;
 	}
-	outfile_fd = open(argv[argc - 1], O_WRONLY | O_TRUNC | O_CREAT, 00666);
-	if (outfile_fd == -1)
+	else
 	{
-		perror(argv[argc - 1]);
-		exit(1);
+		infile_fd = open(argv[1], O_RDONLY);
+		if (infile_fd == -1)
+		{
+			perror(argv[1]);
+			exit(1);
+		}
+		outfile_fd = open(argv[argc - 1], O_WRONLY | O_TRUNC | O_CREAT, 00666);
+		if (outfile_fd == -1)
+		{
+			perror(argv[argc - 1]);
+			exit(1);
+		}
 	}
-	create_pipe(infile_fd, outfile_fd, argv, envp, total_cmds);
+	total_cmds = argc - has_heredoc - 3;
+	create_pipe(infile_fd, outfile_fd, argv, envp, total_cmds, has_heredoc);
 }

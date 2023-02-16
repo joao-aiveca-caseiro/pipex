@@ -6,7 +6,7 @@
 /*   By: jaiveca- <jaiveca-@student.42lisboa.com>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/12 18:46:38 by jaiveca-          #+#    #+#             */
-/*   Updated: 2023/02/14 18:38:38 by jaiveca-         ###   ########.fr       */
+/*   Updated: 2023/02/16 01:46:59 by jaiveca-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,7 +31,7 @@ char	**cmd_parsing(char **envp)
 	{
 		if (ft_strnstr(envp[i], "PATH", 4) != NULL)
 		{
-			envp_path = ft_substr(envp[i], 5, 1000);
+			envp_path = ft_substr(envp[i], 5, ft_strlen(envp[i]));
 			break ;
 		}
 		i++;
