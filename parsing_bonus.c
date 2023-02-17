@@ -6,11 +6,16 @@
 /*   By: jaiveca- <jaiveca-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/12 18:46:38 by jaiveca-          #+#    #+#             */
-/*   Updated: 2023/02/16 14:34:29 by jaiveca-         ###   ########.fr       */
+/*   Updated: 2023/02/17 13:08:42 by jaiveca-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "pipex_bonus.h"
+
+/*
+** Finds PATH in the list of environment variables (envp), then
+** splits it into an array of possible command locations.
+*/
 
 char	**cmd_parsing(char **envp)
 {
@@ -32,6 +37,13 @@ char	**cmd_parsing(char **envp)
 	split_paths = ft_split_paths(envp_path, ':');
 	return (split_paths);
 }
+
+/*
+** Parses the command into a format readable by execve (path + CMD name
+** as first argument), array of command arguments as the second argument).
+** Checks using access if the command exists at any of the splitted paths
+** of the previous function and is executable.
+*/
 
 int	cmd_exec(char *argv, char **envp)
 {
