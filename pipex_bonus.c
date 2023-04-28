@@ -6,7 +6,7 @@
 /*   By: jaiveca- <jaiveca-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/24 13:08:00 by jaiveca-          #+#    #+#             */
-/*   Updated: 2023/02/17 13:49:21 by jaiveca-         ###   ########.fr       */
+/*   Updated: 2023/04/28 19:09:57 by jaiveca-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,8 +38,7 @@ void	child_process(int i, t_pipex table, char **argv, char **envp)
 	close(table.prev_pipe_fd[0]);
 	if (i > 0)
 		close(table.prev_pipe_fd[1]);
-	if (cmd_exec(argv[i + 2 + table.has_heredoc], envp) == 1)
-		exit(1);
+	cmd_exec(argv[i + 2 + table.has_heredoc], envp);
 }
 
 /*

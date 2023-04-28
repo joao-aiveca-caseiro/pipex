@@ -6,7 +6,7 @@
 /*   By: jaiveca- <jaiveca-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/24 13:08:00 by jaiveca-          #+#    #+#             */
-/*   Updated: 2023/02/17 13:49:33 by jaiveca-         ###   ########.fr       */
+/*   Updated: 2023/04/28 19:10:32 by jaiveca-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,8 +24,7 @@ void	child_process1(int infile_fd, int *pipe_fd, char **argv, char **envp)
 	if (dup2(pipe_fd[1], STDOUT_FILENO) == -1)
 		print_error("Child 1");
 	close(pipe_fd[0]);
-	if (cmd_exec(argv[2], envp) == 1)
-		exit(1);
+	cmd_exec(argv[2], envp);
 }
 
 /*
